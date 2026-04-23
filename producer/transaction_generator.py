@@ -5,8 +5,8 @@ from datetime import datetime
 
 fake = Faker()
 
-LOCATIONS = ["Johannesburg", "Cape Town", "Durban", "Pretoria", "Mpumalanga"]
-MERCHANTS = ["Takealot", "Checkers", "Pick n Pay", "Amazon", "Uber", "KFC"]
+LOCATIONS = ["Johannesburg", "Cape Town", "Durban", "Pretoria", "Richard's Bay", "Esikhawini", "Port Elizabeth", "Ermelo", "Polokwane"]
+MERCHANTS = ["Takealot", "Checkers", "Pick n Pay", "Shoprite", "Woolworths", "KFC", "McDonald's", "Spar", "Nando's", "Clicks"]
 
 def generate_transaction():
     user_id = random.randint(1000, 1100)
