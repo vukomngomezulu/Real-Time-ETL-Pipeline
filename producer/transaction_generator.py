@@ -13,9 +13,9 @@ def generate_transaction():
 
     # 10% chance of fraud-like transaction
     if random.random() < 0.1:
-        amount = round(random.uniform(10000, 50000), 2)  # suspicious
+        amount = round(random.uniform(100000, 500000), 2)  # suspicious
     else:
-        amount = round(random.uniform(10, 2000), 2)  # normal
+        amount = round(random.uniform(10, 200000), 2)  # normal
 
     transaction = {
         "user_id": user_id,
@@ -31,7 +31,7 @@ def generate_transaction():
 def stream_transactions():
     while True:
         transaction = generate_transaction()
-        print(transaction)  # later this goes to Kafka
+        print(transaction)  
         time.sleep(1)  # simulate real-time flow
 
 

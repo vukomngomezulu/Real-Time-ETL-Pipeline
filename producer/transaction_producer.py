@@ -2,10 +2,10 @@ from kafka import KafkaProducer
 import json
 import time
 import random
-from faker import Faker
 from datetime import datetime
 
-fake = Faker()
+LOCATIONS = ["Johannesburg", "Cape Town", "Durban", "Pretoria", "Richard's Bay", "Esikhawini", "Port Elizabeth", "Ermelo", "Polokwane", "Bloemfontein", "East London", "Pietermaritzburg", "Nelspruit"]
+MERCHANTS = ["Takealot", "Checkers", "Pick n Pay", "Shoprite", "Woolworths", "KFC", "McDonald's", "Spar", "Nando's", "Clicks", "Dis-Chem", "Makro", "Game", "Edgars"]
 
 producer = KafkaProducer(
     bootstrap_servers='localhost:9092',
@@ -14,11 +14,11 @@ producer = KafkaProducer(
 
 def generate_transaction():
     return {
-        "user_id": random.randint(1000, 1100),
-        "amount": round(random.uniform(10, 50000), 2),
+        "user_id": random.randint(10000, 11000),
+        "amount": round(random.uniform(100, 50000), 2),
         "timestamp": datetime.now().isoformat(),
-        "location": fake.city(),
-        "merchant": fake.company()
+        "location": random.choice(LOCATIONS),
+        "merchant": random.choice(MERCHANTS)
     }
 
 while True:

@@ -8,9 +8,9 @@ consumer = KafkaConsumer(
     value_deserializer=lambda x: json.loads(x.decode('utf-8'))
 )
 
-# fraud rules
+# fraud rules (thresholds in ZAR)
 def is_fraud(transaction):
-    if transaction["amount"] > 10000:
+    if transaction["amount"] > 40000:  # High transaction amount in ZAR
         return True
     if transaction["location"] == "Unknown":
         return True
@@ -18,7 +18,7 @@ def is_fraud(transaction):
 
 def transform(transaction):
     transaction["amount_category"] = (
-        "HIGH" if transaction["amount"] > 10000 else "LOW"
+        "HIGH" if transaction["amount"] > 40000 else "LOW"
     )
     return transaction
 
