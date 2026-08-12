@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FraudWatch ZA - Live Transaction Monitor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.3/chart.umd.min.js"></script>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">FW</span>
+    <div class="brand-text">
+      <h1>FraudWatch <span>ZA</span></h1>
+      <p>Real-time fraud detection ETL monitor</p>
+    </div>
+  </div>
+
+  <nav class="topnav" aria-label="Dashboard sections">
+    <a href="#ledger">Ledger</a>
+    <a href="#alerts">Alerts</a>
+    <a href="#analytics">Analytics</a>
+  </nav>
+
+  <div class="status is-live" id="status">
+    <span class="pulse-dot"></span>
+    <div>
+      <span class="status-label">Streaming</span>
+      <span class="status-time" id="last-updated">Waiting for refresh</span>
+    </div>
+  </div>
+</header>
+
+<main class="layout">
+
+  <section class="overview-band">
+    <div>
+      <p class="section-kicker">Live pipeline</p>
+      <h2>South African transaction risk monitoring</h2>
+    </div>
+    <div class="pipeline-steps" aria-label="ETL pipeline">
+      <span>Producer</span>
+      <i></i>
+      <span>Kafka</span>
+      <i></i>
+      <span>Consumer</span>
+      <i></i>
+      <span>PostgreSQL</span>
+      <i></i>
+      <span>Flask</span>
+    </div>
+  </section>
+
+  <section class="kpi-strip" aria-label="Key metrics">
+    <article class="kpi-card">
+      <div class="kpi-topline">
+        <p class="kpi-label">Total Transactions</p>
+        <span class="kpi-dot teal"></span>
+      </div>
+      <p class="kpi-value mono" id="kpi-total">0</p>
+      <p class="kpi-sub" id="kpi-volume">R0.00 total volume</p>
+    </article>
+
+    <article class="kpi-card danger">
+      <div class="kpi-topline">
+        <p class="kpi-label">Fraud Alerts</p>
+        <span class="kpi-dot red"></span>
+      </div>
+      <p class="kpi-value mono" id="kpi-flagged">0</p>
+      <p class="kpi-sub" id="kpi-alert-sub">0 flagged transactions</p>
+    </article>
+
+    <article class="kpi-card warning">
+      <div class="kpi-topline">
+        <p class="kpi-label">Fraud Rate</p>
+        <span class="kpi-dot amber"></span>
+      </div>
+      <p class="kpi-value mono" id="kpi-fraud-rate">0%</p>
+      <p class="kpi-sub">of processed traffic</p>
+    </article>
+
+    <article class="kpi-card">
+      <div class="kpi-topline">
+        <p class="kpi-label">Average Fraud Score</p>
+        <span class="kpi-dot gold"></span>
+      </div>
+      <p class="kpi-value mono" id="kpi-score">0</p>
+      <p class="kpi-sub">out of 100 risk points</p>
+    </article>
+  </section>
+
+  <section class="operations-grid">
+    <article class="panel ledger-panel" id="ledger">
+      <div class="panel-header">
+        <div>
+          <p class="section-kicker">Real-time monitoring</p>
+          <h2>Live transaction ledger</h2>
+        </div>
+        <span class="panel-tag">last 25</span>
+      </div>
+      <div class="table-wrap">
+        <table class="ledger-table">
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Account holder</th>
+              <th>Amount</th>
+              <th>Merchant</th>
+              <th>Category</th>
+              <th>City</th>
+              <th>Score</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="ledger-body">
+            <tr><td colspan="8" class="empty-row">Waiting for transactions...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </article>
+
+    <aside class="panel alerts-panel" id="alerts">
+      <div class="panel-header">
+        <div>
+          <p class="section-kicker">Fraud operations</p>
+          <h2>Fraud alert feed</h2>
+        </div>
+        <span class="panel-tag">last 15</span>
+      </div>
+      <div class="alerts-list" id="alerts-list">
+        <p class="empty-row">No alerts yet.</p>
+      </div>
+    </aside>
+  </section>
+
+  <section class="analytics-grid" id="analytics">
+    <article class="panel chart-panel">
+      <div class="panel-header">
+        <div>
+          <p class="section-kicker">Transactions by city</p>
+          <h2>City activity</h2>
+        </div>
+      </div>
+      <div class="chart-frame">
+        <canvas id="chart-city"></canvas>
+        <p class="chart-empty" id="chart-city-empty">Waiting for transaction data...</p>
+      </div>
+    </article>
+
+    <article class="panel chart-panel">
+      <div class="panel-header">
+        <div>
+          <p class="section-kicker">Merchant/category activity</p>
+          <h2>Flagged by merchant category</h2>
+        </div>
+      </div>
+      <div class="chart-frame">
+        <canvas id="chart-category"></canvas>
+        <p class="chart-empty" id="chart-category-empty">Waiting for flagged transactions...</p>
+      </div>
+    </article>
+
+    <article class="panel chart-panel">
+      <div class="panel-header">
+        <div>
+          <p class="section-kicker">Risk profile</p>
+          <h2>Fraud score distribution</h2>
+        </div>
+      </div>
+      <div class="chart-frame compact">
+        <canvas id="chart-score"></canvas>
+        <p class="chart-empty" id="chart-score-empty">Waiting for score data...</p>
+      </div>
+    </article>
+
+    <article class="panel chart-panel">
+      <div class="panel-header">
+        <div>
+          <p class="section-kicker">Transaction activity</p>
+          <h2>Recent activity mix</h2>
+        </div>
+      </div>
+      <div class="chart-frame compact">
+        <canvas id="chart-activity"></canvas>
+        <p class="chart-empty" id="chart-activity-empty">Waiting for activity data...</p>
+      </div>
+    </article>
+  </section>
+
+</main>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
