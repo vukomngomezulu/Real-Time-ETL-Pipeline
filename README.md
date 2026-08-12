@@ -205,3 +205,17 @@ docker compose up --build
 
 If a port is already in use, change `POSTGRES_PORT`, `KAFKA_HOST_PORT`, or
 `DASHBOARD_PORT` in `.env`.
+Useful Commands
+## Dashboard
+
+The project includes a live monitoring dashboard for tracking transactions, fraud alerts, risk scores, and pipeline activity.
+
+### FraudWatch ZA Dashboard
+
+![FraudWatch ZA Dashboard](screenshots/dashB1.png)
+
+![FraudWatch ZA Transaction Monitoring](screenshots/dashB2.png)
+
+### Docker Environment
+
+![Docker Environment](screenshots/docker.png)
